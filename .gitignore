@@ -1,5 +1,13 @@
-# Rust build output
-/target/
+# Rust build output. The release comparator .wasm is the exception: it is the
+# exact artifact the registration hash is computed over, so it is tracked and
+# served from a raw GitHub URL. Git cannot re-include a file whose parent
+# directory is excluded, hence the directory-by-directory un-exclusion.
+/target/*
+!/target/wasm32-unknown-unknown/
+/target/wasm32-unknown-unknown/*
+!/target/wasm32-unknown-unknown/release/
+/target/wasm32-unknown-unknown/release/*
+!/target/wasm32-unknown-unknown/release/telegraph_comparator.wasm
 **/*.rs.bk
 
 # Submission scratch: signed payloads, nonces and signatures.
