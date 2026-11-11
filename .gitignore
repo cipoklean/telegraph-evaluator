@@ -1,0 +1,11 @@
+# Rust build output
+/target/
+**/*.rs.bk
+
+# Submission scratch: signed payloads, nonces and signatures.
+# The admitted row is recorded in track03-dns-truth-source.md instead.
+/truth-sources/build/
+
+# Local env
+.env
+.env.*

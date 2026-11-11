@@ -1,0 +1,17 @@
+[package]
+name = "telegraph-comparator"
+version = "0.1.0"
+edition = "2021"
+description = "Minimal comparator module for a Telegraph deterministic intent (STOCK_PRICE_US_EQUITY). no_std, import-free WebAssembly."
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+path = "src/lib.rs"
+
+[profile.release]
+panic = "abort"
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true

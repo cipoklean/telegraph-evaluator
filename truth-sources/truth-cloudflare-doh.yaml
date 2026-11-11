@@ -1,0 +1,111 @@
+version: '1'
+kind: miner
+id: 9000002
+slug: truth-cloudflare-doh
+protocol: generic
+name: Cloudflare 1.1.1.1 (DNS-over-HTTPS JSON API)
+description: >-
+  Free, public, no-key DNS resolution served by Cloudflare 1.1.1.1 over HTTPS.
+  Answers one question, whether a name publishes at least one record of a given
+  type. Read live at request time, so nothing can go stale. Requires the Accept
+  header set to application/dns-json; without it Cloudflare answers HTTP 400.
+base_url: https://cloudflare-dns.com
+
+auth:
+  type: none
+
+endpoints:
+  - path: /resolve
+    external_path: /dns-query
+    method: GET
+    description: >-
+      Resolve one DNS record type for one name through Cloudflare 1.1.1.1 and
+      report whether the name publishes at least one record of that type. Use
+      this for DNS_RECORD_LOOKUP_GENERAL. The response is the Cloudflare DoH
+      JSON document, whose Answer array lists the records found. The Accept
+      header must be application/dns-json.
+    intents: [DNS_RECORD_LOOKUP_GENERAL]
+    params:
+      query:
+        required:
+          - name: name
+            type: string
+            intents: ['*']
+            description: >-
+              Domain name to look up, without a trailing dot, for example
+              example.com or google.com.
+          - name: type
+            type: string
+            intents: ['*']
+            description: >-
+              DNS record type to resolve, one of A, AAAA, CNAME, MX, NS, TXT,
+              SOA, CAA, SRV, PTR.
+            accepted_fields:
+              - value: A
+                intents: ['*']
+                description: IPv4 address records.
+              - value: AAAA
+                intents: ['*']
+                description: IPv6 address records.
+              - value: CNAME
+                intents: ['*']
+                description: Canonical name alias.
+              - value: MX
+                intents: ['*']
+                description: Mail exchange records.
+              - value: NS
+                intents: ['*']
+                description: Authoritative name servers.
+              - value: TXT
+                intents: ['*']
+                description: Free-form text records.
+              - value: SOA
+                intents: ['*']
+                description: Start of authority record.
+              - value: CAA
+                intents: ['*']
+                description: Certificate authority authorisation.
+              - value: SRV
+                intents: ['*']
+                description: Service locator records.
+              - value: PTR
+                intents: ['*']
+                description: Reverse lookup pointer.
+      header:
+        required:
+          - name: Accept
+            type: string
+            intents: ['*']
+            description: >-
+              Must be application/dns-json. Cloudflare returns HTTP 400 without
+              it, so the constant is pinned in intent_mapping.
+
+intent_mapping:
+  DNS_RECORD_LOOKUP_GENERAL:
+    endpoint: /resolve
+    input:
+      name:
+        from: name
+        how: Domain name exactly as asked, without a trailing dot.
+      type:
+        from: record_type
+        how: >-
+          Record type letter code: A, AAAA, CNAME, MX, NS, TXT, SOA, CAA, SRV
+          or PTR.
+      Accept:
+        from: const
+        value: application/dns-json
+    output:
+      has_record:
+        path: Answer
+        how: >-
+          True when the Answer array is present and holds at least one record,
+          false when the response has no Answer array or an empty one. A
+          Status of 0 with an Answer array means records exist; Status 3
+          (NXDOMAIN) and any response with no Answer key mean none exist. Do
+          not treat Status 0 alone as a record existing: a valid name with no
+          record of the asked type answers Status 0 and still has no Answer.
+
+semantics:
+  supported_intents:
+    - DNS_RECORD_LOOKUP_GENERAL

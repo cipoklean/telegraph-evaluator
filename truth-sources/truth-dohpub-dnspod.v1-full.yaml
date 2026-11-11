@@ -1,0 +1,98 @@
+version: '1'
+kind: miner
+id: 9000003
+slug: truth-dohpub-dnspod
+protocol: generic
+name: DNSPod Public DNS (doh.pub, DNS-over-HTTPS JSON API)
+description: >-
+  Free, public, no-key DNS resolution served by DNSPod (Tencent) over HTTPS at
+  doh.pub. Answers one question, whether a name publishes at least one record of
+  a given type. Read live at request time, so nothing can go stale. Needs no
+  request headers. Supports the record types A, AAAA, CNAME, MX, NS, TXT and
+  SOA; CAA, SRV and PTR are rejected by the upstream with UrlParameterError.
+base_url: https://doh.pub
+
+auth:
+  type: none
+
+endpoints:
+  - path: /resolve
+    external_path: /dns-query
+    method: GET
+    description: >-
+      Resolve one DNS record type for one name through DNSPod public DNS and
+      report whether the name publishes at least one record of that type. Use
+      this for DNS_RECORD_LOOKUP_GENERAL. The response is the DoH JSON document,
+      whose Answer array lists the records found. No Accept header is required.
+      Supported types are A, AAAA, CNAME, MX, NS, TXT and SOA; CAA, SRV and PTR
+      return HTTP 400 from this upstream.
+    intents: [DNS_RECORD_LOOKUP_GENERAL]
+    params:
+      query:
+        required:
+          - name: name
+            type: string
+            intents: ['*']
+            description: >-
+              Domain name to look up, without a trailing dot, for example
+              example.com or google.com.
+          - name: type
+            type: string
+            intents: ['*']
+            description: >-
+              DNS record type to resolve. This upstream supports A, AAAA,
+              CNAME, MX, NS, TXT and SOA.
+            accepted_fields:
+              - value: A
+                intents: ['*']
+                description: IPv4 address records.
+              - value: AAAA
+                intents: ['*']
+                description: IPv6 address records.
+              - value: CNAME
+                intents: ['*']
+                description: Canonical name alias.
+              - value: MX
+                intents: ['*']
+                description: Mail exchange records.
+              - value: NS
+                intents: ['*']
+                description: Authoritative name servers.
+              - value: TXT
+                intents: ['*']
+                description: Free-form text records.
+              - value: SOA
+                intents: ['*']
+                description: Start of authority record.
+
+limitations:
+  - code: UNSUPPORTED_RECORD_TYPE
+    message: >-
+      This upstream rejects CAA, SRV and PTR with UrlParameterError. Supported
+      types are A, AAAA, CNAME, MX, NS, TXT and SOA.
+
+intent_mapping:
+  DNS_RECORD_LOOKUP_GENERAL:
+    endpoint: /resolve
+    input:
+      name:
+        from: name
+        how: Domain name exactly as asked, without a trailing dot.
+      type:
+        from: record_type
+        how: >-
+          Record type letter code: A, AAAA, CNAME, MX, NS, TXT or SOA.
+    output:
+      has_record:
+        path: Answer
+        how: >-
+          True when the Answer array is present and holds at least one record,
+          false when the response has no Answer array or an empty one. A
+          Status of 0 with an Answer array means records exist; Status 3
+          (NXDOMAIN) and any response with no Answer key mean none exist. Do
+          not treat Status 0 alone as a record existing: a valid name with no
+          record of the asked type answers Status 0 and still has no Answer.
+
+semantics:
+  supported_intents:
+    - DNS_RECORD_LOOKUP_GENERAL

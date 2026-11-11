@@ -1,0 +1,96 @@
+version: '1'
+kind: miner
+id: 9000001
+slug: truth-google-doh
+protocol: generic
+name: Google Public DNS (DNS-over-HTTPS JSON API)
+description: >-
+  Free, public, no-key DNS resolution served by Google Public DNS over HTTPS.
+  Answers one question, whether a name publishes at least one record of a given
+  type. Read live at request time, so nothing can go stale.
+base_url: https://dns.google
+
+auth:
+  type: none
+
+endpoints:
+  - path: /resolve
+    external_path: /resolve
+    method: GET
+    description: >-
+      Resolve one DNS record type for one name through Google Public DNS and
+      report whether the name publishes at least one record of that type. Use
+      this for DNS_RECORD_LOOKUP_GENERAL. The response is the Google DoH JSON
+      document, whose Answer array lists the records found.
+    intents: [DNS_RECORD_LOOKUP_GENERAL]
+    params:
+      query:
+        required:
+          - name: name
+            type: string
+            intents: ['*']
+            description: >-
+              Domain name to look up, without a trailing dot, for example
+              example.com or google.com.
+          - name: type
+            type: string
+            intents: ['*']
+            description: >-
+              DNS record type to resolve, upper case: one of A, AAAA, CNAME,
+              MX, NS, TXT, SOA, CAA, SRV, PTR.
+            accepted_fields:
+              - value: A
+                intents: ['*']
+                description: IPv4 address records.
+              - value: AAAA
+                intents: ['*']
+                description: IPv6 address records.
+              - value: CNAME
+                intents: ['*']
+                description: Canonical name alias.
+              - value: MX
+                intents: ['*']
+                description: Mail exchange records.
+              - value: NS
+                intents: ['*']
+                description: Authoritative name servers.
+              - value: TXT
+                intents: ['*']
+                description: Free-form text records.
+              - value: SOA
+                intents: ['*']
+                description: Start of authority record.
+              - value: CAA
+                intents: ['*']
+                description: Certificate authority authorisation.
+              - value: SRV
+                intents: ['*']
+                description: Service locator records.
+              - value: PTR
+                intents: ['*']
+                description: Reverse lookup pointer.
+
+intent_mapping:
+  DNS_RECORD_LOOKUP_GENERAL:
+    endpoint: /resolve
+    input:
+      name:
+        from: name
+        how: Domain name exactly as asked, without a trailing dot.
+      type:
+        from: record_type
+        how: >-
+          Upper-case record type letter code: A, AAAA, CNAME, MX, NS, TXT, SOA,
+          CAA, SRV or PTR.
+    output:
+      has_record:
+        path: Answer
+        how: >-
+          True when the Answer array is present and holds at least one record,
+          false when the response has no Answer array or an empty one. A
+          Status of 0 with an Answer array means records exist; Status 3
+          (NXDOMAIN) and any response with no Answer key mean none exist.
+
+semantics:
+  supported_intents:
+    - DNS_RECORD_LOOKUP_GENERAL

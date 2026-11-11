@@ -1,0 +1,33 @@
+version: '1'
+kind: miner
+id: 9000003
+slug: truth-dohpub-dnspod
+protocol: generic
+name: DNSPod Public DNS (doh.pub)
+description: Free, public, no-key DNS resolution. has_record is true when the Answer array is present and non-empty.
+base_url: https://doh.pub
+auth:
+  type: none
+endpoints:
+- path: /dns-query
+  external_path: /dns-query
+  method: GET
+  description: Resolve one DNS record type for one name. has_record is true if the Answer array exists and has entries.
+  intents:
+  - DNS_RECORD_LOOKUP_GENERAL
+  params:
+    query:
+      required:
+      - name: name
+        type: string
+        intents:
+        - '*'
+        description: Domain name without trailing dot.
+      - name: type
+        type: string
+        intents:
+        - '*'
+        description: DNS record type (A, AAAA, CNAME, MX, NS, TXT, SOA).
+semantics:
+  supported_intents:
+  - DNS_RECORD_LOOKUP_GENERAL
