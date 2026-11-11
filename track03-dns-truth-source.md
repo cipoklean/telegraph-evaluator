@@ -1,4 +1,4 @@
-Telegraph Hackathon Season II — Track 03 Evaluators
+DNS Truth Source -- Telegraph Hackathon Season II, Track 03 Evaluators
 Intent:       DNS_RECORD_LOOKUP_GENERAL (deterministic)
 Contribution: truth source (evaluation material)
 Source:       doh.pub (DNSPod public DNS-over-HTTPS), no-key, public HTTPS
