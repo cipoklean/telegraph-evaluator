@@ -1,5 +1,9 @@
 # Telegraph comparator module (STOCK_PRICE_US_EQUITY)
 
+## Track 03 entry: DNS Truth Source
+Truth source for DNS_RECORD_LOOKUP_GENERAL (doh.pub). Admitted 2026-11-11.
+See track03-dns-truth-source.md for the case ID, wallet, and status.
+
 A minimal, import-free WebAssembly **comparator module** for a Telegraph
 deterministic intent. It reproduces the published reference rule from
 <https://anjoman.ai/docs/scoring/build-a-scoring-module>.
