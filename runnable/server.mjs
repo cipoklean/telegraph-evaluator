@@ -40,6 +40,7 @@ const flag = (n, d) => {
 };
 
 const PORT = Number(flag("port", 8790));
+const HOST = flag("host", "127.0.0.1");
 const WASM_PATH = flag(
   "wasm",
   path.join(HERE, "..", "target", "wasm32-unknown-unknown", "release", "telegraph_comparator.wasm"),
@@ -294,8 +295,8 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(PORT, "127.0.0.1", () => {
-  console.log(`comparator runnable endpoint listening on http://127.0.0.1:${PORT}`);
+server.listen(PORT, HOST, () => {
+  console.log(`comparator runnable endpoint listening on http://${HOST}:${PORT}`);
   console.log(`wasm: ${WASM_PATH}`);
   console.log(`wasm sha256: ${wasmSha256} (${wasmBytes.length} bytes, ${imports.length} imports)`);
 });
