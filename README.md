@@ -1,7 +1,7 @@
 # Telegraph comparator module (DNS_RECORD_LOOKUP)
 
 ## Track 03 entry: DNS Truth Source
-Truth source for DNS_RECORD_LOOKUP_GENERAL (doh.pub). Admitted 2026-11-11; `eligible` in the pool snapshot published 2026-11-12.
+Truth source for DNS_RECORD_LOOKUP_GENERAL (doh.pub). Admitted 2026-11-11; `eligible` in the pool snapshot published 2026-11-12. A second truth source (Google Public DNS DoH, all ten record types) was admitted 2026-11-14 with attested provenance and joins the pool at the next freeze; see track03-dns-truth-source.md.
 See track03-dns-truth-source.md for the case ID, wallet, and status.
 
 A minimal, import-free WebAssembly **comparator module** for a Telegraph
