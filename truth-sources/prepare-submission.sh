@@ -17,7 +17,8 @@
 # script. Signing is a separate step you run yourself.
 set -euo pipefail
 
-YAML_FILE="${1:?usage: prepare-submission.sh <truth-source.yaml>}"
+YAML_FILE="${1:?usage: prepare-submission.sh <truth-source.yaml> [source-url]}"
+SOURCE_URL="${2:-}"
 INTENT="DNS_RECORD_LOOKUP_GENERAL"
 NODE="https://devnode.telegraphprotocol.com"
 CHAIN_ID=11155111   # Ethereum Sepolia, per the docs
@@ -27,8 +28,15 @@ OUT="$(cd "$(dirname "$0")" && pwd)/build"
 mkdir -p "$OUT"
 
 echo "== 1. build the JSONL body (one truth_source row) =="
-# jq does the JSON string escaping of the YAML document.
-jq -Rsc '{label_kind: "truth_source", source: .}' "$YAML_FILE" > "$OUT/items.jsonl"
+# jq does the JSON string escaping of the YAML document. An http(s) source_url
+# makes the row attested instead of unverified.
+if [ -n "$SOURCE_URL" ]; then
+  jq -Rsc --arg url "$SOURCE_URL" \
+    '{label_kind: "truth_source", provenance: {source_kind: "public_api", source_url: $url}, source: .}' \
+    "$YAML_FILE" > "$OUT/items.jsonl"
+else
+  jq -Rsc '{label_kind: "truth_source", source: .}' "$YAML_FILE" > "$OUT/items.jsonl"
+fi
 echo "   wrote $OUT/items.jsonl"
 echo "   rows: $(wc -l < "$OUT/items.jsonl" | tr -d ' ')"
 echo "   bytes: $(wc -c < "$OUT/items.jsonl" | tr -d ' ')"
