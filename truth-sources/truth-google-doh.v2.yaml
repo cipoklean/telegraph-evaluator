@@ -1,0 +1,45 @@
+version: '1'
+kind: miner
+id: 9000001
+slug: truth-google-doh
+protocol: generic
+name: Google Public DNS (DNS-over-HTTPS JSON API)
+description: >-
+  Free, public, no-key DNS resolution served by Google Public DNS over HTTPS.
+  Answers one question, whether a name publishes at least one record of a given
+  type. Read live at request time, so nothing can go stale.
+base_url: https://dns.google
+
+auth:
+  type: none
+
+endpoints:
+  - path: /resolve
+    external_path: /resolve
+    method: GET
+    description: >-
+      Resolve one DNS record type for one name through Google Public DNS and
+      report whether the name publishes at least one record of that type. Use
+      this for DNS_RECORD_LOOKUP_GENERAL. has_record is true when the Answer
+      array is present and non-empty. The response is the Google DoH JSON
+      document, whose Answer array lists the records found.
+    intents: [DNS_RECORD_LOOKUP_GENERAL]
+    params:
+      query:
+        required:
+          - name: name
+            type: string
+            intents: ['*']
+            description: >-
+              Domain name to look up, without a trailing dot, for example
+              example.com or google.com.
+          - name: type
+            type: string
+            intents: ['*']
+            description: >-
+              DNS record type to resolve, upper case: one of A, AAAA, CNAME,
+              MX, NS, TXT, SOA, CAA, SRV, PTR.
+
+semantics:
+  supported_intents:
+    - DNS_RECORD_LOOKUP_GENERAL
