@@ -1,16 +1,22 @@
-# Telegraph comparator module (STOCK_PRICE_US_EQUITY)
+# Telegraph comparator module (DNS_RECORD_LOOKUP)
 
 ## Track 03 entry: DNS Truth Source
-Truth source for DNS_RECORD_LOOKUP_GENERAL (doh.pub). Admitted 2026-11-11.
+Truth source for DNS_RECORD_LOOKUP_GENERAL (doh.pub). Admitted 2026-11-11; `eligible` in the pool snapshot published 2026-11-12.
 See track03-dns-truth-source.md for the case ID, wallet, and status.
 
 A minimal, import-free WebAssembly **comparator module** for a Telegraph
 deterministic intent. It reproduces the published reference rule from
 <https://anjoman.ai/docs/scoring/build-a-scoring-module>.
 
-The comparator module is local only: nothing is registered, hosted, or submitted
-for it. The Track 03 truth source described above was submitted to the eval pool
-and admitted.
+The comparator module is registered on the `DNS_RECORD_LOOKUP` family prefix
+(registration #340, 2026-11-12; keccak256
+`d5c56b601993a1d8496426ab9174d55294e417f3739019d67f09d00336bc2113` matches the
+tracked `.wasm`). Its status is `pending`: `DNS_RECORD_LOOKUP` is a
+judgment-class family, and per the scoring docs a comparator registered on a
+judgment family waits at pending rather than going live — the deterministic
+child `DNS_RECORD_LOOKUP_GENERAL` is scored by the node against the pool's
+reference value. The Track 03 truth source described above was submitted to the
+eval pool and is `eligible`.
 
 ## What it exports
 

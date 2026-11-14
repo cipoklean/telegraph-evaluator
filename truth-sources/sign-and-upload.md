@@ -7,7 +7,7 @@ same EIP-191 personal_sign, with no new dependency.
 
 Run from the repo that has viem installed:
 
-    cd /home/ubuntu/telegraph-purse
+    cd /path/to/telegraph-purse
 
     # key is read from .env by node, never echoed
     node --input-type=module -e '
@@ -17,7 +17,7 @@ Run from the repo that has viem installed:
       const m = cfg.match(/^TELEGRAPH_EVM_PRIVATE_KEY=(.+)$/m);
       if (!m) { console.error("key missing"); process.exit(1); }
       const acct = privateKeyToAccount(m[1].trim());
-      const msg = fs.readFileSync("/home/ubuntu/telegraph-evaluator/truth-sources/build/message.txt","utf8");
+      const msg = fs.readFileSync("/path/to/telegraph-evaluator/truth-sources/build/message.txt","utf8");
       const sig = await acct.signMessage({ message: msg });
       console.log("address:", acct.address);
       console.log("signature:", sig);
@@ -31,7 +31,7 @@ equal the bytes the node rebuilds.
 
     ADDR=<the address printed in step A>
     SIG=<the signature printed in step A>
-    cd /home/ubuntu/telegraph-evaluator/truth-sources
+    cd /path/to/telegraph-evaluator/truth-sources
     sed -e "s|^SIG=.*|SIG=\"$SIG\"|" build/upload.sh > build/upload.ready.sh
     sed -i "s|submitter=\$ADDR|submitter=$ADDR|" build/upload.ready.sh
     bash build/upload.ready.sh
