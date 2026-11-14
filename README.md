@@ -1,4 +1,4 @@
-# Telegraph comparator module (DNS_RECORD_LOOKUP)
+# Telegraph comparator module (CRYPTO_PRICE)
 
 ## Track 03 entry: DNS Truth Source
 Truth source for DNS_RECORD_LOOKUP_GENERAL (doh.pub). Admitted 2026-11-11; `eligible` in the pool snapshot published 2026-11-12. A second truth source (Google Public DNS DoH, all ten record types) was admitted 2026-11-14 with attested provenance and joins the pool at the next freeze; see track03-dns-truth-source.md.
@@ -8,15 +8,22 @@ A minimal, import-free WebAssembly **comparator module** for a Telegraph
 deterministic intent. It reproduces the published reference rule from
 <https://anjoman.ai/docs/scoring/build-a-scoring-module>.
 
-The comparator module is registered on the `DNS_RECORD_LOOKUP` family prefix
-(registration #340, 2026-11-12; keccak256
+The comparator module is registered on-chain as registration #432 on the
+`CRYPTO_PRICE` family prefix (2026-11-14; keccak256
 `d5c56b601993a1d8496426ab9174d55294e417f3739019d67f09d00336bc2113` matches the
-tracked `.wasm`). Its status is `pending`: `DNS_RECORD_LOOKUP` is a
-judgment-class family, and per the scoring docs a comparator registered on a
-judgment family waits at pending rather than going live — the deterministic
-child `DNS_RECORD_LOOKUP_GENERAL` is scored by the node against the pool's
-reference value. The Track 03 truth source described above was submitted to the
-eval pool and is `eligible`.
+tracked `.wasm`; registration tx
+`0xb580097e49a7e1641ddf58ee15e808bc960290ae7907bf1a152e4fd96023ef92`). It was
+first registered as #340 on `DNS_RECORD_LOOKUP` (2026-11-12) and deregistered
+on 2026-11-14 (`0x3341c51e00d6d45e77252e3476f91ff950f89ecb9f070135bb4274f20c9cdb7e`):
+that family is judgment-class, so a comparator registered there waits at
+pending forever and never scores. `CRYPTO_PRICE` is deterministic, so #432
+undergoes the node's Stage 1/Stage 2 evaluation like any challenger and
+becomes canonical only if it reproduces the reference comparison exactly (an
+incumbent, registration #270, currently holds that slot). The runnable
+endpoint the node calls is `https://hermes-node.tail007e79.ts.net`, served by
+`runnable/server.mjs`; see `runnable/DEPLOY.md` for the Oracle VM + Tailscale
+Funnel setup. Node-side status:
+`https://devnode.telegraphprotocol.com/api/wasm/432`.
 
 ## What it exports
 
