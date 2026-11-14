@@ -1,4 +1,5 @@
-//! Telegraph comparator module for a deterministic intent (`STOCK_PRICE_US_EQUITY`).
+//! Telegraph comparator module for a deterministic intent (registered on the
+//! `DNS_RECORD_LOOKUP` family as comparator #340).
 //!
 //! Implements the published reference rule exactly. `no_std`, no WASI, no imports.
 //!
