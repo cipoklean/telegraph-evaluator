@@ -1,8 +1,8 @@
 # Telegraph comparator module (CRYPTO_PRICE)
 
 ## Track 03 entry: DNS Truth Source
-Truth source for DNS_RECORD_LOOKUP_GENERAL (doh.pub). Admitted 2026-11-11; `eligible` in the pool snapshot published 2026-11-12. A second truth source (Google Public DNS DoH, all ten record types) was admitted 2026-11-14 with attested provenance and joins the pool at the next freeze; see track03-dns-truth-source.md.
-See track03-dns-truth-source.md for the case ID, wallet, and status.
+Two truth sources for DNS_RECORD_LOOKUP_GENERAL (doh.pub and Google Public DNS DoH, all ten record types). Both are `eligible` in the active pool snapshot `80fac4e8` (published 2026-11-14, in force since epoch 2091), which holds 300 eligible rows from 6 submitters. The intent is live and scored: 25 miners serve it and a paid request through it settled on 2026-11-16 (epoch 2105).
+See track03-dns-truth-source.md for the case IDs, wallet, and status.
 
 A minimal, import-free WebAssembly **comparator module** for a Telegraph
 deterministic intent. It reproduces the published reference rule from
@@ -17,9 +17,13 @@ first registered as #340 on `DNS_RECORD_LOOKUP` (2026-11-12) and deregistered
 on 2026-11-14 (`0x3341c51e00d6d45e77252e3476f91ff950f89ecb9f070135bb4274f20c9cdb7e`):
 that family is judgment-class, so a comparator registered there waits at
 pending forever and never scores. `CRYPTO_PRICE` is deterministic, so #432
-undergoes the node's Stage 1/Stage 2 evaluation like any challenger and
-becomes canonical only if it reproduces the reference comparison exactly (an
-incumbent, registration #270, currently holds that slot). The runnable
+passed the node's correctness gate on 2026-11-14 (eval_score 1.0: 1120 cases,
+0 mismatches, deterministic) and took the canonical slot from incumbent #270
+at ~16:47Z. Comparator slots go to the most recent passer: any later
+registration that reproduces the rule exactly replaces the incumbent, so #432
+was superseded by #434 at 19:45Z the same day, and #434 was itself superseded
+by #463 on 2026-11-16 (the current champion). #432 remains registered as the
+family's rank-3 fallback. The runnable
 endpoint the node calls is `https://hermes-node.tail007e79.ts.net`, served by
 `runnable/server.mjs`; see `runnable/DEPLOY.md` for the Oracle VM + Tailscale
 Funnel setup. Node-side status:
