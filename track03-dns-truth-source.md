@@ -25,6 +25,15 @@ deterministic, canonical, 25 miners — and a paid request through it
 ({name: "example.com", record_type: "A"}) settled on 2026-11-16 at epoch 2105
 (tx 0x4b9fe61f8ff5c33eb2a2f1292b35673862135cf8beaf005b129bd3968a23bac6).
 
+Third truth source, same intent:
+Source:       Cloudflare 1.1.1.1 DoH JSON API (cloudflare-dns.com/dns-query),
+              no-key, Accept: application/dns-json
+Status:       admitted 2026-11-18 (pending the next pool snapshot)
+Coverage:     all ten record types
+Note:         the first upload was rejected `source_unparseable` — an
+              `accepted_fields` block under a param breaks the pool parser.
+              Same source without it was admitted (truth-cloudflare-doh.v2.yaml).
+
 A minimal miner YAML describing a free, keyless DNS resolver. has_record is
 true when the Answer array is present and non-empty. Two comparator
 registrations sit pending on the DNS_RECORD_LOOKUP family prefix (#106, #150;
